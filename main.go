@@ -6,11 +6,15 @@ import (
 )
 
 func main() {
+	fmt.Println("Press Enter at anytime to finish...")
+
 	messageChan := make(chan string)
-	go sender(messageChan)
+	go sender(messageChan, 1)
+	go sender(messageChan, 2)
+	go sender(messageChan, 3)
+	go sender(messageChan, 4)
 	go receiver(messageChan)
 
-	fmt.Println("Press Enter to finish....")
 	fmt.Scanln()
 }
 
@@ -21,9 +25,9 @@ func receiver(message chan string) {
 	}
 }
 
-func sender(message chan string) {
+func sender(message chan string, routineIndex int) {
 	for {
-		message <- "a message"
-		time.Sleep(2 * time.Second)
+		message <- fmt.Sprintf("a message from goroutine %d", routineIndex)
+		time.Sleep(time.Duration(routineIndex) * time.Second)
 	}
 }
